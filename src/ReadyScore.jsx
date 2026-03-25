@@ -107,8 +107,8 @@ function getGapMessage(catId, score, maxScore) {
     records: "Document access is the most common friction point people report after a disruption. The fix is a one-time organizational project (2-3 hours) plus a quarterly review habit.",
     home: "Your home is your first line of defense. Most disruptions are shelter-in-place situations, not evacuations. A week of self-sufficiency buys you time while systems recover.",
     communication: "Cell networks are the first infrastructure to degrade under load. Having a plan that doesn't depend entirely on your phone working normally is a gap most households never address until it's too late.",
-    mobility: "This isn't about crisis \u2014 it's about optionality. Knowing your exit terms and having your life organized to move quickly serves you for job offers, family situations, and opportunities just as much as emergencies.",
-    special: "The people and animals who depend on you have needs that generic preparedness doesn't cover. Addressing them specifically \u2014 and writing it down so others can help \u2014 is what separates a real plan from a vague intention.",
+    mobility: "This isn't about crisis — it's about optionality. Knowing your exit terms and having your life organized to move quickly serves you for job offers, family situations, and opportunities just as much as emergencies.",
+    special: "The people and animals who depend on you have needs that generic preparedness doesn't cover. Addressing them specifically — and writing it down so others can help — is what separates a real plan from a vague intention.",
   };
   return messages[catId];
 }
@@ -117,7 +117,7 @@ function getOverallMessage(totalPct) {
   if (totalPct >= 0.85) return { level: "Strong", color: "#2e7d32", message: "You're well ahead of most households. Focus on maintaining what you've built and closing any remaining gaps." };
   if (totalPct >= 0.65) return { level: "Solid foundation", color: "#1565c0", message: "You've done more than most. A few targeted improvements would make a meaningful difference." };
   if (totalPct >= 0.40) return { level: "Getting started", color: "#e65100", message: "You've taken some steps. The good news: the highest-impact improvements are usually the quickest to do." };
-  return { level: "Fresh start", color: "#ad1457", message: "You're starting from scratch, which is actually a great position \u2014 no bad habits to undo. Start with Supplies (your go-bag) for the fastest win." };
+  return { level: "Fresh start", color: "#ad1457", message: "You're starting from scratch, which is actually a great position — no bad habits to undo. Start with Supplies (your go-bag) for the fastest win." };
 }
 
 // ─── Main Component ───
@@ -169,7 +169,7 @@ export default function ReadyScore() {
           <div className="h-1 w-16 bg-rose-500 rounded mb-6"></div>
           <p className="text-gray-700 mb-4">
             This assessment covers 7 dimensions of household readiness. For each statement,
-            rate how true it is for your household right now \u2014 not where you'd like to be.
+            rate how true it is for your household right now — not where you'd like to be.
           </p>
           <p className="text-gray-700 mb-6">
             There are no wrong answers. The goal is to see where you stand so you know
@@ -186,7 +186,7 @@ export default function ReadyScore() {
           <div className="bg-gray-50 rounded-xl p-4 mb-6">
             <p className="text-sm text-gray-500">
               <span className="font-semibold text-gray-700">{totalQuestions} questions</span> across 7 categories.
-              Takes about 5 minutes. Your answers stay in your browser \u2014 nothing is stored or sent anywhere.
+              Takes about 5 minutes. Your answers stay in your browser — nothing is stored or sent anywhere.
             </p>
           </div>
           <button
@@ -282,7 +282,7 @@ export default function ReadyScore() {
           <div className="bg-gray-900 rounded-2xl p-6 mb-6 text-center">
             <p className="text-gray-300 text-sm mb-2">This assessment is part of a full course on household preparedness.</p>
             <p className="text-white font-semibold mb-3">
-              7 modules covering everything from go-bags to relocation readiness \u2014 all sourced to official guidance, all designed for urban households.
+              7 modules covering everything from go-bags to relocation readiness — all sourced to official guidance, all designed for urban households.
             </p>
             <p className="text-gray-400 text-sm">[your-course-url]</p>
           </div>
