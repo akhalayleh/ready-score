@@ -8,6 +8,7 @@ const CATEGORIES = [
     label: "Awareness",
     subtitle: "Do you understand what could disrupt your household?",
     color: "#2e7d32",
+    scaleType: "knowledge",
     questions: [
       { text: "I know the most likely disruptions for where I live (weather, infrastructure, seismic, etc.)", id: "a1" },
       { text: "I understand how my building's infrastructure works (water, power, elevators, backup systems)", id: "a2" },
@@ -20,6 +21,7 @@ const CATEGORIES = [
     label: "Supplies",
     subtitle: "Could you leave your home in 10 minutes with what you need for 3 days?",
     color: "#1565c0",
+    scaleType: "action",
     questions: [
       { text: "I have a packed go-bag that I could grab and leave with right now", id: "s1" },
       { text: "My go-bag has water, food, and medications for at least 72 hours", id: "s2" },
@@ -32,6 +34,7 @@ const CATEGORIES = [
     label: "Records",
     subtitle: "Could you prove who you are and access your money from anywhere?",
     color: "#6a1b9a",
+    scaleType: "action",
     questions: [
       { text: "I have copies of my key identity documents (passport, ID) stored separately from the originals", id: "r1" },
       { text: "I have digital backups of important documents in a secure cloud location", id: "r2" },
@@ -45,8 +48,9 @@ const CATEGORIES = [
     label: "Home",
     subtitle: "Is your home set up to sustain you if you can't leave for a week?",
     color: "#e65100",
+    scaleType: "action",
     questions: [
-      { text: "I have enough stored water for my household for at least 3 days (1 gallon per person per day)", id: "h1" },
+      { text: "I have enough stored water for my household for at least 3 days (4 litres [1 gallon] per person per day)", id: "h1" },
       { text: "I have a way to charge my phone if the power is out for 48 hours", id: "h2" },
       { text: "I know where my building's utility shutoffs are (water, gas, electrical panel)", id: "h3" },
       { text: "My medications are organized with at least a 7-day buffer before I'd run out", id: "h4" },
@@ -57,6 +61,7 @@ const CATEGORIES = [
     label: "Communication",
     subtitle: "If cell networks went down, could your family find each other?",
     color: "#00838f",
+    scaleType: "action",
     questions: [
       { text: "My household has a designated meeting point if we can't reach each other by phone", id: "c1" },
       { text: "I have an out-of-area contact person that all family members know to call", id: "c2" },
@@ -69,6 +74,7 @@ const CATEGORIES = [
     label: "Mobility",
     subtitle: "If you had to relocate in 48 hours, how much friction would you face?",
     color: "#ad1457",
+    scaleType: "knowledge",
     questions: [
       { text: "I know the termination terms for my lease, utilities, and major subscriptions", id: "m1" },
       { text: "I could list every recurring financial commitment I have (and how to cancel each one)", id: "m2" },
@@ -81,6 +87,7 @@ const CATEGORIES = [
     label: "Special Needs",
     subtitle: "Have you accounted for the specific people and animals in your care?",
     color: "#4e342e",
+    scaleType: "action",
     questions: [
       { text: "I've thought about how each person in my household (children, elderly, medical needs) would be affected", id: "sp1" },
       { text: "If I have pets: I have a plan for their transport, food, and shelter that doesn't depend on 'figure it out later'", id: "sp2" },
@@ -90,12 +97,20 @@ const CATEGORIES = [
   },
 ];
 
-const SCORE_LABELS = [
-  { value: 0, label: "Not at all", emoji: "" },
-  { value: 1, label: "Thought about it", emoji: "" },
-  { value: 2, label: "Partially done", emoji: "" },
-  { value: 3, label: "Fully done", emoji: "" },
-];
+const SCALE_TYPES = {
+  knowledge: [
+    { value: 0, label: "No" },
+    { value: 1, label: "Vaguely" },
+    { value: 2, label: "Mostly" },
+    { value: 3, label: "Yes, clearly" },
+  ],
+  action: [
+    { value: 0, label: "Not yet" },
+    { value: 1, label: "Planned" },
+    { value: 2, label: "Partly" },
+    { value: 3, label: "Yes, fully" },
+  ],
+};
 
 // ─── Gap analysis messaging ───
 function getGapMessage(catId, score, maxScore) {
@@ -356,11 +371,12 @@ export default function ReadyScore() {
         <div className="space-y-3">
           {currentCategory.questions.map((q) => {
             const currentVal = answers[q.id];
+            const scaleLabels = SCALE_TYPES[currentCategory.scaleType] || SCALE_TYPES.action;
             return (
               <div key={q.id} className="bg-white rounded-xl shadow-sm p-5">
                 <p className="text-sm text-gray-700 mb-3">{q.text}</p>
                 <div className="flex gap-2">
-                  {SCORE_LABELS.map(opt => {
+                  {scaleLabels.map(opt => {
                     const isSelected = currentVal === opt.value;
                     return (
                       <button
