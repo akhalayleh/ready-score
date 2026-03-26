@@ -115,12 +115,33 @@ const SCALE_TYPES = {
 // âââ Persona-specific end screen copy âââ
 const PERSONA_COPY = {
   operator: {
-    headline: "You've got the mindset. Now close the gaps.",
-    subhead: "Your score shows where you stand. STEADFAST gives you the system to get where you need to be.",
-    ctaLabel: "Get the full STEADFAST framework",
+    intro: "This assessment is part of STEADFAST \u2014 a structured, source-verified emergency preparedness course built for urban households.",
+    detail: "Seven modules. Every recommendation traced to official guidance from FEMA, Red Cross, UK Government, and Australian Government. No fear-mongering. No survivalist theatre.",
+    headline: "The course launches soon. Want early access?",
+    ctaLabel: "Notify me",
     ctaUrl: "https://besteadfast.carrd.co",
-    emailPrompt: "Enter your email for a free preparedness quick-start guide:",
+    emailPrompt: "",
+    footerNote: "No spam. No daily \\"tips.\\" Just a heads-up when it's live.",
   },
+  scroller: {
+    intro: "This assessment is from STEADFAST \u2014 a course that helps you get your household sorted in one afternoon, so you can stop googling this stuff at 2am.",
+    detail: "We turned months of research into a simple system. You follow the steps, check the boxes, and you're done. For real this time.",
+    headline: "Want to know when it launches?",
+    ctaLabel: "Let me know",
+    ctaUrl: "https://besteadfast.carrd.co",
+    emailPrompt: "",
+    footerNote: "One email when it's ready. That's it.",
+  },
+  default: {
+    intro: "This assessment is part of STEADFAST \u2014 a practical preparedness course for urban households. No fear-mongering, no survivalist gear lists. Just a structured system to get your household sorted.",
+    detail: "",
+    headline: "Launching soon. Want a heads-up?",
+    ctaLabel: "Notify me",
+    ctaUrl: "https://besteadfast.carrd.co",
+    emailPrompt: "",
+    footerNote: "One email when it's ready. That's it.",
+  },
+};,
   scroller: {
     headline: "That satisfying feeling? That's knowing where you stand.",
     subhead: "Most people have no idea how prepared (or unprepared) they really are. Now you do. Want to actually fix the gaps?",
@@ -380,18 +401,20 @@ export default function ReadyScore() {
 
           {/* STEADFAST End Screen / CTA */}
           <div className="bg-gray-900 rounded-2xl p-8 mb-6">
-            <p className="text-xs font-semibold uppercase tracking-widest text-rose-400 mb-3">STEADFAST</p>
-            <h3 className="text-xl font-bold text-white mb-2">{personaCopy.headline}</h3>
-            <p className="text-gray-300 text-sm mb-6">{personaCopy.subhead}</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-rose-400 mb-4">STEADFAST</p>
+            <p className="text-gray-300 text-sm mb-3">{personaCopy.intro}</p>
+            {personaCopy.detail && (
+              <p className="text-gray-400 text-sm mb-5">{personaCopy.detail}</p>
+            )}
+            <h3 className="text-xl font-bold text-white mb-5">{personaCopy.headline}</h3>
 
             {/* Email Capture */}
             {emailStatus === "success" ? (
               <div className="bg-gray-800 rounded-xl p-4 mb-4">
-                <p className="text-green-400 font-semibold text-sm">You're in. Check your inbox.</p>
+                <p className="text-green-400 font-semibold text-sm">You\'re on the list. We\'ll be in touch.</p>
               </div>
             ) : (
               <form onSubmit={handleEmailSubmit} className="mb-4">
-                <p className="text-gray-400 text-xs mb-2">{personaCopy.emailPrompt}</p>
                 <div className="flex gap-2">
                   <input
                     type="email"
@@ -406,7 +429,7 @@ export default function ReadyScore() {
                     disabled={emailStatus === "submitting"}
                     className="px-5 py-2.5 bg-rose-500 text-white text-sm font-semibold rounded-xl hover:bg-rose-600 transition-colors disabled:opacity-50"
                   >
-                    {emailStatus === "submitting" ? "..." : "Send"}
+                    {emailStatus === "submitting" ? "..." : personaCopy.ctaLabel}
                   </button>
                 </div>
                 {emailStatus === "error" && (
@@ -415,15 +438,7 @@ export default function ReadyScore() {
               </form>
             )}
 
-            {/* CTA Button */}
-            <a
-              href={personaCopy.ctaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full py-3 px-6 bg-white text-gray-900 font-semibold rounded-xl text-center text-sm hover:bg-gray-100 transition-colors"
-            >
-              {personaCopy.ctaLabel}
-            </a>
+            <p className="text-gray-500 text-xs">{personaCopy.footerNote}</p>
           </div>
 
           {/* Retake */}
