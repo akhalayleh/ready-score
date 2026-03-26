@@ -121,7 +121,7 @@ const PERSONA_COPY = {
     ctaLabel: "Notify me",
     ctaUrl: "https://besteadfast.carrd.co",
     emailPrompt: "",
-    footerNote: "No spam. No daily \\"tips.\\" Just a heads-up when it's live.",
+    footerNote: `No spam. No daily "tips." Just a heads-up when it's live.`,
   },
   scroller: {
     intro: "This assessment is from STEADFAST \u2014 a course that helps you get your household sorted in one afternoon, so you can stop googling this stuff at 2am.",
