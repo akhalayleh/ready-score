@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts";
 
-// âââ Category definitions with questions âââ
+// ─── Category definitions with questions ───
 const CATEGORIES = [
   {
     id: "awareness",
@@ -112,10 +112,10 @@ const SCALE_TYPES = {
   ],
 };
 
-// âââ Persona-specific end screen copy âââ
+// ─── Persona-specific end screen copy ───
 const PERSONA_COPY = {
   operator: {
-    intro: "This assessment is part of STEADFAST â a structured, source-verified emergency preparedness course built for urban households.",
+    intro: "This assessment is part of STEADFAST — a structured, source-verified emergency preparedness course built for urban households.",
     detail: "Seven modules. Every recommendation traced to official guidance from FEMA, Red Cross, UK Government, and Australian Government. No fear-mongering. No survivalist theatre.",
     headline: "The course launches soon. Want early access?",
     ctaLabel: "Notify me",
@@ -124,7 +124,7 @@ const PERSONA_COPY = {
     footerNote: `No spam. No daily "tips." Just a heads-up when it's live.`,
   },
   scroller: {
-    intro: "This assessment is from STEADFAST â a course that helps you get your household sorted in one afternoon, so you can stop googling this stuff at 2am.",
+    intro: "This assessment is from STEADFAST — a course that helps you get your household sorted in one afternoon, so you can stop googling this stuff at 2am.",
     detail: "We turned months of research into a simple system. You follow the steps, check the boxes, and you're done. For real this time.",
     headline: "Want to know when it launches?",
     ctaLabel: "Let me know",
@@ -133,7 +133,7 @@ const PERSONA_COPY = {
     footerNote: "One email when it's ready. That's it.",
   },
   default: {
-    intro: "This assessment is part of STEADFAST â a practical preparedness course for urban households. No fear-mongering, no survivalist gear lists. Just a structured system to get your household sorted.",
+    intro: "This assessment is part of STEADFAST — a practical preparedness course for urban households. No fear-mongering, no survivalist gear lists. Just a structured system to get your household sorted.",
     detail: "",
     headline: "Launching soon. Want a heads-up?",
     ctaLabel: "Notify me",
@@ -143,7 +143,7 @@ const PERSONA_COPY = {
   },
 };
 
-// âââ Gap analysis messaging âââ
+// ─── Gap analysis messaging ───
 function getGapMessage(catId, score, maxScore) {
   const pct = score / maxScore;
   if (pct >= 0.8) return null;
@@ -166,7 +166,7 @@ function getOverallMessage(totalPct) {
   return { level: "Fresh start", color: "#ad1457", message: "You're starting from scratch, which is actually a great position \u2014 no bad habits to undo. Start with Supplies (your go-bag) for the fastest win." };
 }
 
-// âââ Main Component âââ
+// ─── Main Component ───
 export default function ReadyScore() {
   const [answers, setAnswers] = useState({});
   const [currentCat, setCurrentCat] = useState(0);
@@ -262,7 +262,7 @@ export default function ReadyScore() {
   const weakest = [...catScores].sort((a, b) => a.pct - b.pct);
   const personaCopy = PERSONA_COPY[persona] || PERSONA_COPY.default;
 
-  // âââ Intro Screen âââ
+  // ─── Intro Screen ───
   if (!started) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -273,7 +273,7 @@ export default function ReadyScore() {
           <div className="h-1 w-16 bg-rose-500 rounded mb-6"></div>
           <p className="text-gray-700 mb-4">
             This assessment covers 7 dimensions of household readiness. For each statement,
-            rate how true it is for your household right now â not where you'd like to be.
+            rate how true it is for your household right now — not where you'd like to be.
           </p>
           <p className="text-gray-700 mb-6">
             There are no wrong answers. The goal is to see where you stand so you know
@@ -290,7 +290,7 @@ export default function ReadyScore() {
           <div className="bg-gray-50 rounded-xl p-4 mb-6">
             <p className="text-sm text-gray-500">
               <span className="font-semibold text-gray-700">{totalQuestions} questions</span> across 7 categories.
-              Takes about 5 minutes. Your answers stay in your browser â nothing is stored or sent anywhere.
+              Takes about 5 minutes. Your answers stay in your browser — nothing is stored or sent anywhere.
             </p>
           </div>
           <button
@@ -304,7 +304,7 @@ export default function ReadyScore() {
     );
   }
 
-  // âââ Results Screen âââ
+  // ─── Results Screen ───
   if (showResults) {
     return (
       <div className="min-h-screen bg-gray-50 p-4">
@@ -438,7 +438,7 @@ export default function ReadyScore() {
     );
   }
 
-  // âââ Question Screen âââ
+  // ─── Question Screen ───
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-lg mx-auto">
