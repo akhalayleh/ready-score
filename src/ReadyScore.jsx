@@ -1,7 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts";
 
-// ─── Category definitions with questions ───
+// âââ Category definitions with questions âââ
 const CATEGORIES = [
   {
     id: "awareness",
@@ -112,18 +112,43 @@ const SCALE_TYPES = {
   ],
 };
 
-// ─── Gap analysis messaging ───
+// âââ Persona-specific end screen copy âââ
+const PERSONA_COPY = {
+  operator: {
+    headline: "You've got the mindset. Now close the gaps.",
+    subhead: "Your score shows where you stand. STEADFAST gives you the system to get where you need to be.",
+    ctaLabel: "Get the full STEADFAST framework",
+    ctaUrl: "https://besteadfast.carrd.co",
+    emailPrompt: "Enter your email for a free preparedness quick-start guide:",
+  },
+  scroller: {
+    headline: "That satisfying feeling? That's knowing where you stand.",
+    subhead: "Most people have no idea how prepared (or unprepared) they really are. Now you do. Want to actually fix the gaps?",
+    ctaLabel: "See how STEADFAST can help",
+    ctaUrl: "https://besteadfast.carrd.co",
+    emailPrompt: "Drop your email â we'll send you the first step (free):",
+  },
+  default: {
+    headline: "Now you know where you stand.",
+    subhead: "STEADFAST is a step-by-step system for modern household preparedness. Close your gaps with clear, actionable guidance.",
+    ctaLabel: "Learn more about STEADFAST",
+    ctaUrl: "https://besteadfast.carrd.co",
+    emailPrompt: "Enter your email for a free preparedness quick-start guide:",
+  },
+};
+
+// âââ Gap analysis messaging âââ
 function getGapMessage(catId, score, maxScore) {
   const pct = score / maxScore;
   if (pct >= 0.8) return null;
   const messages = {
     awareness: "Most people underestimate how interconnected urban infrastructure is. A single failure (like power) cascades into water, communication, and transportation problems within hours. Understanding your specific situation is the foundation everything else builds on.",
     supplies: "This is your most actionable quick win. A basic Tier 1 go-bag can be assembled in 30 minutes with items you likely already own. The free go-bag checklist breaks this down step by step.",
-    records: "Document access is the most common friction point people report after a disruption. The fix is a one-time organizational project (2-3 hours) plus a quarterly review habit.",
+    records: "Document access is the most common friction point people report after a disruption. The fix is a one-time organizational project (2\u20133 hours) plus a quarterly review habit.",
     home: "Your home is your first line of defense. Most disruptions are shelter-in-place situations, not evacuations. A week of self-sufficiency buys you time while systems recover.",
     communication: "Cell networks are the first infrastructure to degrade under load. Having a plan that doesn't depend entirely on your phone working normally is a gap most households never address until it's too late.",
-    mobility: "This isn't about crisis — it's about optionality. Knowing your exit terms and having your life organized to move quickly serves you for job offers, family situations, and opportunities just as much as emergencies.",
-    special: "The people and animals who depend on you have needs that generic preparedness doesn't cover. Addressing them specifically — and writing it down so others can help — is what separates a real plan from a vague intention.",
+    mobility: "This isn't about crisis \u2014 it's about optionality. Knowing your exit terms and having your life organized to move quickly serves you for job offers, family situations, and opportunities just as much as emergencies.",
+    special: "The people and animals who depend on you have needs that generic preparedness doesn't cover. Addressing them specifically \u2014 and writing it down so others can help \u2014 is what separates a real plan from a vague intention.",
   };
   return messages[catId];
 }
@@ -132,18 +157,81 @@ function getOverallMessage(totalPct) {
   if (totalPct >= 0.85) return { level: "Strong", color: "#2e7d32", message: "You're well ahead of most households. Focus on maintaining what you've built and closing any remaining gaps." };
   if (totalPct >= 0.65) return { level: "Solid foundation", color: "#1565c0", message: "You've done more than most. A few targeted improvements would make a meaningful difference." };
   if (totalPct >= 0.40) return { level: "Getting started", color: "#e65100", message: "You've taken some steps. The good news: the highest-impact improvements are usually the quickest to do." };
-  return { level: "Fresh start", color: "#ad1457", message: "You're starting from scratch, which is actually a great position — no bad habits to undo. Start with Supplies (your go-bag) for the fastest win." };
+  return { level: "Fresh start", color: "#ad1457", message: "You're starting from scratch, which is actually a great position \u2014 no bad habits to undo. Start with Supplies (your go-bag) for the fastest win." };
 }
 
-// ─── Main Component ───
+// âââ Main Component âââ
 export default function ReadyScore() {
   const [answers, setAnswers] = useState({});
   const [currentCat, setCurrentCat] = useState(0);
   const [showResults, setShowResults] = useState(false);
   const [started, setStarted] = useState(false);
+  const [email, setEmail] = useState("");
+  const [emailStatus, setEmailStatus] = useState("idle"); // idle | submitting | success | error
+  const [persona, setPersona] = useState("default");
+
+  // Read persona from URL param on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const v = params.get("v");
+    if (v === "operator") setPersona("operator");
+    else if (v === "scroller") setPersona("scroller");
+  }, []);
 
   const handleAnswer = (questionId, value) => {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
+  };
+
+  const handleEmailSubmit = async (e) => {
+    e.preventDefault();
+    if (!email || emailStatus === "submitting") return;
+    setEmailStatus("submitting");
+
+    // Mailchimp embedded form POST (replace MAILCHIMP_FORM_URL with actual URL after setup)
+    // Using a hidden iframe approach for cross-origin form submission
+    try {
+      const formUrl = window.__STEADFAST_MAILCHIMP_URL || "";
+      if (!formUrl) {
+        // Fallback: store locally and mark success (configure Mailchimp URL later)
+        console.log("STEADFAST email capture (Mailchimp not configured yet):", email);
+        setEmailStatus("success");
+        return;
+      }
+      const iframe = document.createElement("iframe");
+      iframe.name = "steadfast-mc-frame";
+      iframe.style.display = "none";
+      document.body.appendChild(iframe);
+
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = formUrl;
+      form.target = "steadfast-mc-frame";
+
+      const emailField = document.createElement("input");
+      emailField.name = "EMAIL";
+      emailField.value = email;
+      form.appendChild(emailField);
+
+      // Tag for assessment-interest
+      const tagField = document.createElement("input");
+      tagField.name = "tags";
+      tagField.value = "assessment-interest";
+      form.appendChild(tagField);
+
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
+
+      // Clean up iframe after a delay
+      setTimeout(() => {
+        if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+      }, 5000);
+
+      setEmailStatus("success");
+    } catch (err) {
+      console.error("Email submission error:", err);
+      setEmailStatus("error");
+    }
   };
 
   const catScores = useMemo(() => {
@@ -173,18 +261,20 @@ export default function ReadyScore() {
 
   const overallMsg = getOverallMessage(totalPct);
   const weakest = [...catScores].sort((a, b) => a.pct - b.pct);
+  const personaCopy = PERSONA_COPY[persona] || PERSONA_COPY.default;
 
-  // ─── Intro Screen ───
+  // âââ Intro Screen âââ
   if (!started) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="max-w-lg w-full bg-white rounded-2xl shadow-lg p-8">
+          <p className="text-xs font-semibold uppercase tracking-widest text-rose-500 mb-2">STEADFAST</p>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">The Ready Score</h1>
           <p className="text-gray-500 mb-6">A 5-minute self-assessment for household preparedness</p>
           <div className="h-1 w-16 bg-rose-500 rounded mb-6"></div>
           <p className="text-gray-700 mb-4">
             This assessment covers 7 dimensions of household readiness. For each statement,
-            rate how true it is for your household right now — not where you'd like to be.
+            rate how true it is for your household right now â not where you'd like to be.
           </p>
           <p className="text-gray-700 mb-6">
             There are no wrong answers. The goal is to see where you stand so you know
@@ -201,7 +291,7 @@ export default function ReadyScore() {
           <div className="bg-gray-50 rounded-xl p-4 mb-6">
             <p className="text-sm text-gray-500">
               <span className="font-semibold text-gray-700">{totalQuestions} questions</span> across 7 categories.
-              Takes about 5 minutes. Your answers stay in your browser — nothing is stored or sent anywhere.
+              Takes about 5 minutes. Your answers stay in your browser â nothing is stored or sent anywhere.
             </p>
           </div>
           <button
@@ -215,14 +305,14 @@ export default function ReadyScore() {
     );
   }
 
-  // ─── Results Screen ───
+  // âââ Results Screen âââ
   if (showResults) {
     return (
       <div className="min-h-screen bg-gray-50 p-4">
         <div className="max-w-2xl mx-auto">
           {/* Score Header */}
           <div className="bg-white rounded-2xl shadow-lg p-8 mb-6 text-center">
-            <p className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-2">Your Ready Score</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-rose-500 mb-3">STEADFAST Ready Score</p>
             <div className="text-7xl font-bold mb-2" style={{ color: overallMsg.color }}>{readyScore}</div>
             <p className="text-lg font-semibold mb-1" style={{ color: overallMsg.color }}>{overallMsg.level}</p>
             <p className="text-gray-500 text-sm max-w-md mx-auto">{overallMsg.message}</p>
@@ -293,13 +383,52 @@ export default function ReadyScore() {
             </div>
           </div>
 
-          {/* CTA */}
-          <div className="bg-gray-900 rounded-2xl p-6 mb-6 text-center">
-            <p className="text-gray-300 text-sm mb-2">This assessment is part of a full course on household preparedness.</p>
-            <p className="text-white font-semibold mb-3">
-              7 modules covering everything from go-bags to relocation readiness — all sourced to official guidance, all designed for urban households.
-            </p>
-            <p className="text-gray-400 text-sm">[your-course-url]</p>
+          {/* STEADFAST End Screen / CTA */}
+          <div className="bg-gray-900 rounded-2xl p-8 mb-6">
+            <p className="text-xs font-semibold uppercase tracking-widest text-rose-400 mb-3">STEADFAST</p>
+            <h3 className="text-xl font-bold text-white mb-2">{personaCopy.headline}</h3>
+            <p className="text-gray-300 text-sm mb-6">{personaCopy.subhead}</p>
+
+            {/* Email Capture */}
+            {emailStatus === "success" ? (
+              <div className="bg-gray-800 rounded-xl p-4 mb-4">
+                <p className="text-green-400 font-semibold text-sm">You're in. Check your inbox.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleEmailSubmit} className="mb-4">
+                <p className="text-gray-400 text-xs mb-2">{personaCopy.emailPrompt}</p>
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    required
+                    className="flex-1 px-4 py-2.5 rounded-xl bg-gray-800 text-white text-sm border border-gray-700 focus:border-rose-500 focus:outline-none placeholder-gray-500"
+                  />
+                  <button
+                    type="submit"
+                    disabled={emailStatus === "submitting"}
+                    className="px-5 py-2.5 bg-rose-500 text-white text-sm font-semibold rounded-xl hover:bg-rose-600 transition-colors disabled:opacity-50"
+                  >
+                    {emailStatus === "submitting" ? "..." : "Send"}
+                  </button>
+                </div>
+                {emailStatus === "error" && (
+                  <p className="text-red-400 text-xs mt-2">Something went wrong. Try again?</p>
+                )}
+              </form>
+            )}
+
+            {/* CTA Button */}
+            <a
+              href={personaCopy.ctaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full py-3 px-6 bg-white text-gray-900 font-semibold rounded-xl text-center text-sm hover:bg-gray-100 transition-colors"
+            >
+              {personaCopy.ctaLabel}
+            </a>
           </div>
 
           {/* Retake */}
@@ -316,7 +445,7 @@ export default function ReadyScore() {
     );
   }
 
-  // ─── Question Screen ───
+  // âââ Question Screen âââ
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-lg mx-auto">
