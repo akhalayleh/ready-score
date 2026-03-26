@@ -115,7 +115,7 @@ const SCALE_TYPES = {
 // âââ Persona-specific end screen copy âââ
 const PERSONA_COPY = {
   operator: {
-    intro: "This assessment is part of STEADFAST \u2014 a structured, source-verified emergency preparedness course built for urban households.",
+    intro: "This assessment is part of STEADFAST â a structured, source-verified emergency preparedness course built for urban households.",
     detail: "Seven modules. Every recommendation traced to official guidance from FEMA, Red Cross, UK Government, and Australian Government. No fear-mongering. No survivalist theatre.",
     headline: "The course launches soon. Want early access?",
     ctaLabel: "Notify me",
@@ -124,7 +124,7 @@ const PERSONA_COPY = {
     footerNote: `No spam. No daily "tips." Just a heads-up when it's live.`,
   },
   scroller: {
-    intro: "This assessment is from STEADFAST \u2014 a course that helps you get your household sorted in one afternoon, so you can stop googling this stuff at 2am.",
+    intro: "This assessment is from STEADFAST â a course that helps you get your household sorted in one afternoon, so you can stop googling this stuff at 2am.",
     detail: "We turned months of research into a simple system. You follow the steps, check the boxes, and you're done. For real this time.",
     headline: "Want to know when it launches?",
     ctaLabel: "Let me know",
@@ -133,28 +133,13 @@ const PERSONA_COPY = {
     footerNote: "One email when it's ready. That's it.",
   },
   default: {
-    intro: "This assessment is part of STEADFAST \u2014 a practical preparedness course for urban households. No fear-mongering, no survivalist gear lists. Just a structured system to get your household sorted.",
+    intro: "This assessment is part of STEADFAST â a practical preparedness course for urban households. No fear-mongering, no survivalist gear lists. Just a structured system to get your household sorted.",
     detail: "",
     headline: "Launching soon. Want a heads-up?",
     ctaLabel: "Notify me",
     ctaUrl: "https://besteadfast.carrd.co",
     emailPrompt: "",
     footerNote: "One email when it's ready. That's it.",
-  },
-};,
-  scroller: {
-    headline: "That satisfying feeling? That's knowing where you stand.",
-    subhead: "Most people have no idea how prepared (or unprepared) they really are. Now you do. Want to actually fix the gaps?",
-    ctaLabel: "See how STEADFAST can help",
-    ctaUrl: "https://besteadfast.carrd.co",
-    emailPrompt: "Drop your email â we'll send you the first step (free):",
-  },
-  default: {
-    headline: "Now you know where you stand.",
-    subhead: "STEADFAST is a step-by-step system for modern household preparedness. Close your gaps with clear, actionable guidance.",
-    ctaLabel: "Learn more about STEADFAST",
-    ctaUrl: "https://besteadfast.carrd.co",
-    emailPrompt: "Enter your email for a free preparedness quick-start guide:",
   },
 };
 
@@ -208,11 +193,9 @@ export default function ReadyScore() {
     if (!email || emailStatus === "submitting") return;
     setEmailStatus("submitting");
 
-    // Mailchimp embedded form POST (replace MAILCHIMP_FORM_URL with actual URL after setup)
-    // Using a hidden iframe approach for cross-origin form submission
+    // Mailchimp embedded form POST via hidden iframe (cross-origin)
     try {
       const formUrl = "https://gmail.us7.list-manage.com/subscribe/post?u=49c11de751c0d9deac23ebdb1&id=2645fdc3f3&f_id=00115fe0f0";
-
       const iframe = document.createElement("iframe");
       iframe.name = "steadfast-mc-frame";
       iframe.style.display = "none";
@@ -411,7 +394,7 @@ export default function ReadyScore() {
             {/* Email Capture */}
             {emailStatus === "success" ? (
               <div className="bg-gray-800 rounded-xl p-4 mb-4">
-                <p className="text-green-400 font-semibold text-sm">You\'re on the list. We\'ll be in touch.</p>
+                <p className="text-green-400 font-semibold text-sm">You're on the list. We'll be in touch.</p>
               </div>
             ) : (
               <form onSubmit={handleEmailSubmit} className="mb-4">
