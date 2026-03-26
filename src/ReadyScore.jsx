@@ -190,13 +190,8 @@ export default function ReadyScore() {
     // Mailchimp embedded form POST (replace MAILCHIMP_FORM_URL with actual URL after setup)
     // Using a hidden iframe approach for cross-origin form submission
     try {
-      const formUrl = window.__STEADFAST_MAILCHIMP_URL || "";
-      if (!formUrl) {
-        // Fallback: store locally and mark success (configure Mailchimp URL later)
-        console.log("STEADFAST email capture (Mailchimp not configured yet):", email);
-        setEmailStatus("success");
-        return;
-      }
+      const formUrl = "https://gmail.us7.list-manage.com/subscribe/post?u=49c11de751c0d9deac23ebdb1&id=2645fdc3f3&f_id=00115fe0f0";
+
       const iframe = document.createElement("iframe");
       iframe.name = "steadfast-mc-frame";
       iframe.style.display = "none";
